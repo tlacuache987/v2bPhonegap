@@ -6,6 +6,7 @@
     <script type="text/javascript">
        /** Called when phonegap javascript is loaded */
                 function onDeviceReady(){
+					alert("iniciando");
                     var options = { frequency: 1000 };  // Update every 1 seconds
                         navigator.accelerometer.watchAcceleration(onSuccess, onError,options);
                 }
