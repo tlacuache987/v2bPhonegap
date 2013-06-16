@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Acceleration Example</title>
+    <script src="jquery-1.7.2.min.js"></script>    
+    <script src="phonegap-1.1.0.js"></script>
+    
+    <script>
+	
+	//Objeto Capturador
+	var capturador;
+	
+    // El dispositivo esta listo para usarce
+    document.addEventListener("deviceready", onDeviceReady, false);
+	
+    // Función a ejecutar cuando el dispositivo esta listo
+    function onDeviceReady() {
+		//objeto Capturador
+		try{
+			capturador = navigator.device.capture;
+		}catch(exception){
+			navigator.notification.alert(exception);
+		}
+		
+		//Evento botón Para obtener la Aceleración
+		$("#obtenerAceleracion").on("click", function(){
+			navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+		});
+		
+		//Evento botón Para obtener Audio
+		$("#obtenerAudio").on("click", function(event){
+			capturador.captureAudio(function(archivos){
+				for(var i=0; i<archivos.length; i++){
+					var ruta = archivos[i].fullPath;
+					var type = archivos[i].type;
+				}
+				$("#obtenerCapture_aqui").html("capturaste Audio");
+			},function(){
+				navigator.notification.alert("Error al capturar Audio");
+			});
+		});
+		
+		//Evento botón Para obtener Imagen
+		$("#obtenerImagen").on("click", function(event){
+			capturador.captureAudio(function(archivos){
+				for(var i=0; i<archivos.length; i++){
+					var ruta = archivos[i].fullPath;
+					var type = archivos[i].type;
+				}
+				$("#obtenerCapture_aqui").html("capturaste Imagen");
+			},function(){
+				navigator.notification.alert("Error al capturar Imagen");
+			});
+		});
+		
+		//Evento botón Para obtener Video
+		$("#obtenerVideo").on("click", function(event){
+			capturador.captureAudio(function(archivos){
+				for(var i=0; i<archivos.length; i++){
+					var ruta = archivos[i].fullPath;
+					var type = archivos[i].type;
+				}
+				$("#obtenerCapture_aqui").html("capturaste Video");
+			},function(){
+				navigator.notification.alert("Error al capturar Video");
+			});
+		});
+    
+		$("#obtenerGeolocalizacion").on("click", function(){
+			try{
+				navigator.geolocation.getCurrentPosition(function(posicion){
+					$("#obtenerGeolocalizacion_aqui").html("Localiazado en:<br />"+
+						"Latitud: " + posicion.coords.latitude + "<br />"+
+						"Longitud: " + posicion.coords.longitude);
+				}, function(){
+					navigator.notification.alert("Error al ubicar Geolocalizacion");
+				});
+			}catch(ex){
+				navigator.notification.alert("Excepcion en geolocation: " + ex);
+			}
+		});
+		
+		$("#obtenerBrujula").on("click", function(){
+			try{
+				navigator.compass.watchHeading(function(posicion){
+					$("#obtenerBrujula_aqui").html("Posicion en:<br />"+
+						posicion);
+				}, function(){
+					alert("Error al ubicar Brujula");
+				});
+			}catch(ex){
+				alert("Excepcion en compass: " + ex);
+			}
+		});
+		
+		$("#obtenerBeep").on("click", function(){
+			try{
+				navigator.notification.beep(3);
+			}catch(ex){
+				navigator.notification.alert("Excepcion en notification.beep");
+			}
+		});
+		
+		$("#obtenerVibrar").on("click", function(){
+			try{
+				navigator.notification.vibrate(5000);
+			}catch(ex){
+				navigator.notification.alert("Excepcion en notification.vibrate");
+			}
+		});
+		
+		$("#obtenerAlert").on("click", function(){
+			navigator.notification.alert($(this).attr("data-msg"), function(){
+				
+			}, "¡ Alerta !", "Ok");
+		});
+		
+		$("#obtenerConfirm").on("click", function(){
+			navigator.notification.confirm("Mensaje de confirmación", function(btn){
+				alert(btn);
+			}, "Confirmación", "Si,No");
+		});
+		
+	}
+
+    // onSuccess: obtener la aceleraciòn
+    function onSuccess(aceleracion) {
+        $("#obtenerAceleracion_aqui").html('x: ' + aceleracion.x + '<br />' +
+              'y: ' + aceleracion.y + '<br />' +
+              'z: ' + aceleracion.z + '<br />' +
+              'timestamp: '      + aceleracion.timestamp + '<br />');
+    }
+
+    // onError: Mostrar mensaje de error
+    function onError() {
+        alert('onError!');
+    }
+
+    </script>
+  </head>
+  <body>
+    <h1>Ejemplo</h1>
+    <p>getCurrentAcceleration</p>
+    <p id="obtenerAceleracion_aqui">Acelerometro aqui!</p>
+    <br />
+    <input type="button" id="obtenerAceleracion" value="Acelerometro"/>
+    <br /><br />
+    <input type="button" id="obtenerAudio" value="Audio"/>
+    <input type="button" id="obtenerImagen" value="Imagen"/>
+    <input type="button" id="obtenerVideo" value="Video"/>
+    <br /><br />
+    <p id="obtenerGeolocalizacion_aqui">Geolocalizacion aqui!</p>
+    <br />
+    <input type="button" id="obtenerGeolocalizacion" value="Geolocalizacion"/>
+    <br /><br />
+    <p id="obtenerBrujula_aqui">Brujula aqui!</p>
+    <br />
+    <input type="button" id="obtenerBrujula" value="Brujula"/>
+    <br /><br />
+    <input type="button" id="obtenerBeep" value="Beep"/>
+    <input type="button" id="obtenerVibrar" value="Vibrar"/>
+    <br /><br />
+    <input type="button" id="obtenerAlert" value="Alert" data-msg="Mensaje de alerta"/>
+    <input type="button" id="obtenerConfirm" value="Confirm"/>
+    
+  </body>
+</html>
